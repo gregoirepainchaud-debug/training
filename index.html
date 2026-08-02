@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Entraînement" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="logobicep.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Mon entraînement – 12 semaines</title>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --card:#111827;
+      --card2:#1f2937;
+      --text:#f9fafb;
+      --muted:#cbd5e1;
+      --accent:#22c55e;
+      --accent2:#16a34a;
+      --danger:#ef4444;
+      --line:#334155;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      background:linear-gradient(180deg,#0f172a,#111827);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{max-width:760px;margin:0 auto;padding:18px 16px 48px}
+    h1{font-size:1.8rem;margin:8px 0 4px}
+    h2{font-size:1.25rem;margin:0 0 14px}
+    p{line-height:1.45}
+    .muted{color:var(--muted)}
+    .card{
+      background:rgba(17,24,39,.96);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      margin-top:14px;
+      box-shadow:0 12px 30px rgba(0,0,0,.22);
+    }
+    .topline{
+      display:flex;
+      gap:10px;
+      justify-content:space-between;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      background:#052e16;
+      color:#bbf7d0;
+      border:1px solid #166534;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.88rem;
+      font-weight:700;
+    }
+    .progress{
+      height:12px;
+      border-radius:999px;
+      background:#0b1220;
+      overflow:hidden;
+      margin:14px 0 4px;
+      border:1px solid #1e293b;
+    }
+    .progress > div{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--accent),#86efac);
+      transition:width .25s ease;
+    }
+    .exercise{
+      font-size:2rem;
+      font-weight:800;
+      margin:18px 0 8px;
+      line-height:1.1;
+    }
+    .instruction{
+      font-size:1.08rem;
+      color:var(--muted);
+      min-height:52px;
+    }
+    .counter{
+      margin-top:12px;
+      font-size:.95rem;
+      color:#94a3b8;
+    }
+    button{
+      width:100%;
+      border:0;
+      border-radius:14px;
+      padding:15px 16px;
+      font-size:1.05rem;
+      font-weight:800;
+      cursor:pointer;
+      margin-top:12px;
+    }
+    .primary{background:var(--accent);color:#052e16}
+    .primary:active{background:var(--accent2);color:white}
+    .secondary{background:#334155;color:white}
+    .danger{background:#7f1d1d;color:#fee2e2}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .hidden{display:none!important}
+    .rest-time{
+      font-size:3rem;
+      font-weight:900;
+      text-align:center;
+      margin:14px 0;
+      font-variant-numeric:tabular-nums;
+    }
+    .done{
+      font-size:2rem;
+      text-align:center;
+      font-weight:900;
+      margin:18px 0 8px;
+    }
+    details{margin-top:14px}
+    summary{cursor:pointer;font-weight:800}
+    ul{padding-left:22px}
+    li{margin:.45rem 0}
+    .small{font-size:.9rem}
+    .history-item{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:9px 0;
+      border-bottom:1px solid #263244;
+    }
+    input, select{
+      width:100%;
+      background:#0b1220;
+      color:white;
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:12px;
+      font-size:1rem;
+    }
+    label{display:block;margin:10px 0 6px;color:var(--muted);font-weight:700}
+    .footer{margin-top:22px;text-align:center;color:#64748b;font-size:.85rem}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topline">
+    <div>
+      <h1>Mon entraînement</h1>
+      <div class="muted">Programme de 12 semaines · début le 3 août 2026</div>
+    </div>
+    <div class="badge" id="weekBadge">Semaine 1</div>
+  </div>
+
+  <section class="card" id="todayCard">
+    <h2 id="dateTitle">Aujourd’hui</h2>
+    <div id="sessionSummary" class="muted"></div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <div id="progressText" class="small muted"></div>
+
+    <div id="restDay" class="hidden">
+      <div class="done">Pas d’exercices aujourd’hui mon chanceux!</div>
+      <p class="muted" style="text-align:center">Profite de ta récupération. Tu peux marcher tranquillement si ça te tente.</p>
+    </div>
+
+    <div id="workoutArea" class="hidden">
+      <div class="exercise" id="exerciseName"></div>
+      <div class="instruction" id="exerciseInstruction"></div>
+      <div class="counter" id="exerciseCounter"></div>
+
+      <button class="primary" id="nextBtn">J’ai terminé · Next</button>
+
+      <div id="restPanel" class="hidden">
+        <div class="rest-time" id="restDisplay">00:30</div>
+        <p class="muted" style="text-align:center">Temps de repos écoulé</p>
+        <button class="primary" id="skipRest">Next · Prochain exercice</button>
+      </div>
+    </div>
+
+    <div id="completeArea" class="hidden">
+      <div class="done">Séance terminée 🎉</div>
+      <p class="muted" style="text-align:center">Ta progression a été sauvegardée sur cet appareil.</p>
+      <button class="secondary" id="restartBtn">Refaire la séance</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Cardio du jour</h2>
+    <div id="cardioDetails"></div>
+    <button class="secondary" id="markCardioBtn">Marquer le cardio comme terminé</button>
+  </section>
+
+  <section class="card">
+    <details>
+      <summary>Voir la technique des exercices</summary>
+      <ul>
+        <li><strong>Pushups :</strong> corps droit, mains légèrement plus larges que les épaules, poitrine vers le sol. Arrête avant que la forme se détériore.</li>
+        <li><strong>Squats :</strong> recule les hanches comme pour t’asseoir. Genoux dans la direction des orteils, talons au sol.</li>
+        <li><strong>Fentes :</strong> grand pas vers l’avant, descends doucement, puis pousse dans le pied avant pour revenir.</li>
+        <li><strong>Planche :</strong> avant-bras au sol, fesses ni trop hautes ni trop basses, abdominaux serrés.</li>
+        <li><strong>Superman :</strong> couché sur le ventre, lève doucement bras et jambes, sans forcer le cou.</li>
+        <li><strong>Ponts fessiers :</strong> couché sur le dos, genoux pliés, pousse les hanches vers le plafond.</li>
+        <li><strong>Chaise :</strong> dos au mur, genoux environ à angle droit, poids réparti dans les pieds.</li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="card">
+    <h2>Historique récent</h2>
+    <div id="history"></div>
+  </section>
+
+  <section class="card">
+    <h2>Réglages</h2>
+    <label for="dateOverride">Tester une autre date</label>
+    <input id="dateOverride" type="date" />
+    <button class="secondary" id="applyDateBtn">Charger cette date</button>
+    <button class="danger" id="resetBtn">Effacer toute la progression</button>
+  </section>
+
+  <div class="footer">Les données restent dans le navigateur de cet appareil.</div>
+</div>
+
+<script>
+(() => {
+  const START_DATE = new Date("2026-08-03T00:00:00");
+  const STORAGE_KEY = "gregoire_training_12w_v1";
+  const DAY_MS = 86400000;
+
+  const strengthByBlock = [
+    {weeks:[1,2], circuits:2, pushups:22, squats:15, lunges:10, plank:30, superman:15, bridges:15, chair:90},
+    {weeks:[3,4], circuits:2, pushups:25, squats:18, lunges:10, plank:40, superman:18, bridges:18, chair:105},
+    {weeks:[5,6], circuits:3, pushups:22, squats:20, lunges:12, plank:45, superman:20, bridges:20, chair:120},
+    {weeks:[7,8], circuits:3, pushups:25, squats:22, lunges:12, plank:60, superman:22, bridges:22, chair:135},
+    {weeks:[9,10], circuits:3, pushups:28, squats:25, lunges:14, plank:75, superman:25, bridges:25, chair:150},
+    {weeks:[11,12], circuits:3, pushups:30, squats:28, lunges:15, plank:90, superman:28, bridges:28, chair:165}
+  ];
+
+  const cardioByWeek = {
+    1:{run:30, walk:60}, 2:{run:30, walk:60},
+    3:{run:45, walk:60}, 4:{run:45, walk:60},
+    5:{run:60, walk:60}, 6:{run:60, walk:60},
+    7:{run:90, walk:60}, 8:{run:90, walk:60},
+    9:{run:120, walk:60}, 10:{run:120, walk:60},
+    11:{run:180, walk:60}, 12:{run:180, walk:60}
+  };
+
+  // 0=dimanche ... 6=samedi
+  const weeklyPlan = {
+    0:{type:"rest", label:"Repos"},
+    1:{type:"both", label:"Cardio + renforcement"},
+    2:{type:"cardio", label:"Cardio"},
+    3:{type:"both", label:"Cardio + renforcement"},
+    4:{type:"light", label:"Marche active ou repos"},
+    5:{type:"both", label:"Cardio + renforcement"},
+    6:{type:"lightCardio", label:"Cardio léger"}
+  };
+
+  let appDate = new Date();
+  appDate.setHours(0,0,0,0);
+  let state = loadState();
+  let sequence = [];
+  let currentIndex = 0;
+  let restTimer = null;
+  let restElapsed = 0;
+
+  const $ = id => document.getElementById(id);
+
+  function loadState(){
+    try{
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {days:{}};
+    }catch{
+      return {days:{}};
+    }
+  }
+  function saveState(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+  function dateKey(d){
+    return d.toISOString().slice(0,10);
+  }
+  function diffDays(a,b){
+    const aa = new Date(a); aa.setHours(12,0,0,0);
+    const bb = new Date(b); bb.setHours(12,0,0,0);
+    return Math.floor((aa-bb)/DAY_MS);
+  }
+  function getWeek(d){
+    const n = diffDays(d, START_DATE);
+    if(n < 0) return 0;
+    return Math.min(12, Math.floor(n/7)+1);
+  }
+  function strengthForWeek(week){
+    return strengthByBlock.find(b => b.weeks.includes(week)) || strengthByBlock[strengthByBlock.length-1];
+  }
+  function fmtSeconds(s){
+    const m = Math.floor(s/60);
+    const sec = s%60;
+    return `${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+  }
+  function isTestDay(d){
+    const k = dateKey(d);
+    return k === "2026-08-01" || k === "2026-08-02";
+  }
+  function readableDuration(s){
+    if(s < 60) return `${s} secondes`;
+    const m = Math.floor(s/60), r=s%60;
+    return r ? `${m} min ${r} s` : `${m} minute${m>1?"s":""}`;
+  }
+  function buildSequence(week){
+    const p = strengthForWeek(week);
+    const exercises = [
+      {name:"Pushups", instruction:`Fais ${p.pushups} répétitions propres. Garde 2 ou 3 répétitions en réserve.`, rest:75},
+      {name:"Squats", instruction:`Fais ${p.squats} répétitions contrôlées.`, rest:45},
+      {name:"Fentes", instruction:`Fais ${p.lunges} répétitions par jambe.`, rest:75},
+      {name:"Planche", instruction:`Tiens la position pendant ${readableDuration(p.plank)}.`, rest:60},
+      {name:"Superman", instruction:`Fais ${p.superman} répétitions lentes.`, rest:30},
+      {name:"Ponts fessiers", instruction:`Fais ${p.bridges} répétitions en serrant les fessiers en haut.`, rest:45},
+      {name:"Chaise", instruction:`Tiens la position pendant ${readableDuration(p.chair)}.`, rest:120}
+    ];
+    const out = [];
+    for(let c=1;c<=p.circuits;c++){
+      exercises.forEach((e,i)=>out.push({...e, circuit:c, circuits:p.circuits, isLast:i===exercises.length-1}));
+    }
+    return out;
+  }
+  function render(){
+    stopRestTimer();
+    const realWeek = getWeek(appDate);
+    const testDay = isTestDay(appDate);
+    const week = testDay ? 1 : realWeek;
+    const dayPlan = testDay ? {type:"both", label:"Journée fictive de test"} : weeklyPlan[appDate.getDay()];
+    const key = dateKey(appDate);
+    const dayState = state.days[key] || {};
+    $("dateTitle").textContent = appDate.toLocaleDateString("fr-CA",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    $("weekBadge").textContent = testDay ? "Mode test" : (week === 0 ? "Avant le départ" : week >= 12 ? "Semaine 12" : `Semaine ${week}`);
+    $("sessionSummary").textContent = testDay
+      ? "Séance fictive pour tester l’application. Le vrai programme commence lundi 3 août 2026."
+      : (week === 0 ? "Le programme commence le lundi 3 août 2026." : dayPlan.label);
+
+    $("restDay").classList.add("hidden");
+    $("workoutArea").classList.add("hidden");
+    $("completeArea").classList.add("hidden");
+
+    if(week === 0 || dayPlan.type === "rest"){
+      $("restDay").classList.remove("hidden");
+      $("progressBar").style.width = dayPlan.type==="rest" ? "100%" : "0%";
+      $("progressText").textContent = "";
+      sequence = [];
+    } else if(["both"].includes(dayPlan.type)){
+      sequence = buildSequence(week);
+      currentIndex = Math.min(dayState.index || 0, sequence.length);
+      if(dayState.strengthComplete || currentIndex >= sequence.length){
+        $("completeArea").classList.remove("hidden");
+        $("progressBar").style.width = "100%";
+        $("progressText").textContent = "Renforcement terminé";
+      } else {
+        $("workoutArea").classList.remove("hidden");
+        renderExercise();
+      }
+    } else {
+      $("restDay").classList.remove("hidden");
+      $("restDay").querySelector(".done").textContent =
+        dayPlan.type==="light" ? "Marche active ou repos aujourd’hui" : "Cardio léger aujourd’hui";
+      $("restDay").querySelector("p").textContent =
+        dayPlan.type==="light" ? "Tu peux prendre congé ou faire une marche confortable de 30 à 45 minutes." : "Fais une sortie facile, sans chercher la performance.";
+      $("progressBar").style.width = dayState.cardioComplete ? "100%" : "0%";
+      $("progressText").textContent = dayState.cardioComplete ? "Cardio terminé" : "";
+      sequence = [];
+    }
+    renderCardio(week, dayPlan, dayState);
+    renderHistory();
+  }
+
+  function renderExercise(){
+    const ex = sequence[currentIndex];
+    if(!ex){
+      finishStrength();
+      return;
+    }
+    $("exerciseName").textContent = ex.name;
+    $("exerciseInstruction").textContent = ex.instruction;
+    $("exerciseCounter").textContent =
+      `Circuit ${ex.circuit} sur ${ex.circuits} · exercice ${(currentIndex % 7)+1} sur 7`;
+    const pct = (currentIndex/sequence.length)*100;
+    $("progressBar").style.width = `${pct}%`;
+    $("progressText").textContent = `${currentIndex} exercice${currentIndex!==1?"s":""} terminé${currentIndex!==1?"s":""} sur ${sequence.length}`;
+    $("restPanel").classList.add("hidden");
+    $("nextBtn").classList.remove("hidden");
+
+    restElapsed = 0;
+    $("restDisplay").textContent = fmtSeconds(restElapsed);
+  }
+
+  function completeCurrent(){
+    const key = dateKey(appDate);
+    const ex = sequence[currentIndex];
+    currentIndex++;
+    state.days[key] = {...(state.days[key]||{}), index:currentIndex, updatedAt:Date.now()};
+    saveState();
+    if(currentIndex >= sequence.length){
+      finishStrength();
+    } else {
+      showRest();
+    }
+  }
+
+  function showRest(){
+    $("nextBtn").classList.add("hidden");
+
+    $("restPanel").classList.remove("hidden");
+    restElapsed = 0;
+    $("restDisplay").textContent = fmtSeconds(restElapsed);
+    startRestTimer();
+  }
+
+  function startRestTimer(){
+    stopRestTimer();
+    restTimer = setInterval(()=>{
+      restElapsed++;
+      $("restDisplay").textContent = fmtSeconds(restElapsed);
+    },1000);
+  }
+  function stopRestTimer(){
+    if(restTimer){ clearInterval(restTimer); restTimer=null; }
+  }
+  function nextAfterRest(){
+    stopRestTimer();
+    renderExercise();
+  }
+  function finishStrength(){
+    const key = dateKey(appDate);
+    state.days[key] = {...(state.days[key]||{}), index:sequence.length, strengthComplete:true, completedAt:Date.now()};
+    saveState();
+    $("workoutArea").classList.add("hidden");
+    $("completeArea").classList.remove("hidden");
+    $("progressBar").style.width = "100%";
+    $("progressText").textContent = "Renforcement terminé";
+    renderHistory();
+  }
+
+  function renderCardio(week, dayPlan, dayState){
+    const box = $("cardioDetails");
+    const btn = $("markCardioBtn");
+    if(week===0 || dayPlan.type==="rest"){
+      box.innerHTML = `<p class="muted">Aucun cardio prévu aujourd’hui.</p>`;
+      btn.classList.add("hidden");
+      return;
+    }
+    btn.classList.remove("hidden");
+    btn.textContent = dayState.cardioComplete ? "Cardio terminé ✓" : "Marquer le cardio comme terminé";
+    if(dayPlan.type==="light"){
+      box.innerHTML = `<p><strong>Option :</strong> marche confortable de 30 à 45 minutes, ou repos complet.</p>`;
+    } else if(dayPlan.type==="lightCardio"){
+      box.innerHTML = `<p><strong>Sortie facile :</strong> 5 km à intensité confortable. Tu peux utiliser les mêmes intervalles que la semaine, mais sans pousser.</p>`;
+    } else {
+      const c = cardioByWeek[week] || cardioByWeek[12];
+      box.innerHTML = `
+        <p><strong>Échauffement :</strong> 10 minutes de marche.</p>
+        <p><strong>Intervalles :</strong> ${readableDuration(c.run)} de jogging léger, puis ${readableDuration(c.walk)} de marche rapide.</p>
+        <p><strong>Durée :</strong> répète jusqu’à avoir parcouru 5 km.</p>
+        <p class="muted small">Tu devrais terminer en ayant l’impression que tu aurais pu faire un intervalle de plus.</p>`;
+    }
+  }
+
+  function renderHistory(){
+    const entries = Object.entries(state.days)
+      .filter(([,v]) => v.strengthComplete || v.cardioComplete)
+      .sort((a,b)=>b[0].localeCompare(a[0]))
+      .slice(0,10);
+    $("history").innerHTML = entries.length ? entries.map(([d,v])=>{
+      const parts=[];
+      if(v.strengthComplete) parts.push("Renforcement");
+      if(v.cardioComplete) parts.push("Cardio");
+      const dd = new Date(d+"T12:00:00").toLocaleDateString("fr-CA",{day:"numeric",month:"short"});
+      return `<div class="history-item"><strong>${dd}</strong><span class="muted">${parts.join(" + ")}</span></div>`;
+    }).join("") : `<div class="muted">Aucune séance complétée pour le moment.</div>`;
+  }
+
+  $("nextBtn").addEventListener("click", completeCurrent);
+  $("skipRest").addEventListener("click", nextAfterRest);
+  $("restartBtn").addEventListener("click", ()=>{
+    const key=dateKey(appDate);
+    state.days[key] = {...(state.days[key]||{}), index:0, strengthComplete:false};
+    saveState(); render();
+  });
+  $("markCardioBtn").addEventListener("click", ()=>{
+    const key=dateKey(appDate);
+    const cur=state.days[key]||{};
+    state.days[key]={...cur, cardioComplete:!cur.cardioComplete, updatedAt:Date.now()};
+    saveState(); render();
+  });
+  $("applyDateBtn").addEventListener("click", ()=>{
+    const v=$("dateOverride").value;
+    if(v){ appDate=new Date(v+"T12:00:00"); render(); }
+  });
+  $("resetBtn").addEventListener("click", ()=>{
+    if(confirm("Effacer toute la progression enregistrée sur cet appareil?")){
+      localStorage.removeItem(STORAGE_KEY);
+      state={days:{}};
+      render();
+    }
+  });
+
+  $("dateOverride").value = dateKey(appDate);
+  render();
+})();
+</script>
+</body>
+</html>
