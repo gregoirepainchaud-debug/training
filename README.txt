@@ -1,8 +1,5 @@
-Dépose ensemble sur GitHub Pages :
-- index.html
-- logobicep.png
-- apple-touch-icon.png
-- manifest.webmanifest
+Version 4 – programme de 16 semaines.
 
-Sur iPhone : ouvre la page dans Safari, puis Partager > Sur l’écran d’accueil.
-L’icône du bras apparaîtra dans la liste d’apps. Si une ancienne icône reste en cache, supprime le raccourci de l’écran d’accueil et ajoute-le de nouveau.
+Dépose index.html, manifest.webmanifest, logobicep.png et apple-touch-icon.png dans le même dossier GitHub Pages.
+L'application détecte automatiquement la date. Les données sont conservées dans le localStorage du navigateur.
+Le 3 août 2026 est marqué par défaut comme renforcement et cardio déjà complétés.
