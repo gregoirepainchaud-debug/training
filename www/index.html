@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Training — Prototype annonces écran verrouillé</title>
+<style>
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#0f172a;color:#f9fafb}
+  .wrap{max-width:640px;margin:0 auto;padding:20px 16px 40px}
+  h1{font-size:1.5rem;margin:6px 0 2px} .muted{color:#94a3b8} .small{font-size:.9rem}
+  .card{background:#111827;border:1px solid #334155;border-radius:16px;padding:16px;margin-top:14px}
+  .phase{font-size:1.9rem;font-weight:900;text-align:center;margin:10px 0 2px}
+  .timer{font-size:3rem;font-weight:900;text-align:center;font-variant-numeric:tabular-nums;color:#fbbf24}
+  button{width:100%;border:0;border-radius:14px;padding:15px;font-size:1.05rem;font-weight:800;cursor:pointer;margin-top:12px}
+  .primary{background:#22c55e;color:#052e16}.danger{background:#7f1d1d;color:#fee2e2}
+  li{margin:.35rem 0} .ok{color:#86efac}.warn{color:#fbbf24}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Training — prototype</h1>
+  <div class="muted">Test décisif : les annonces vocales passent-elles, à l'heure, iPhone verrouillé dans la poche ?</div>
+
+  <div class="card">
+    <div class="phase" id="phaseLabel">Prêt</div>
+    <div class="timer" id="timer">03:00</div>
+    <div class="muted small" id="status" style="text-align:center">Séance test de 3 minutes : échauffement 30 s, puis 3 × (course 20 s / marche 20 s), retour au calme 30 s.</div>
+    <button class="primary" id="startBtn">Lancer le test</button>
+    <button class="danger" id="stopBtn" style="display:none">Arrêter et tout annuler</button>
+  </div>
+
+  <div class="card">
+    <strong>Annonces cédulées (heure = depuis le départ)</strong>
+    <ul id="scheduleList" class="small"></ul>
+    <p class="muted small">Mécanisme testé : au départ, l'app cédule TOUTES les annonces d'un coup auprès d'iOS (notifications locales dont le son est la phrase vocale pré-rendue). Ensuite, même si l'app est suspendue ou l'écran verrouillé, c'est le système qui déclenche — plus aucun JavaScript n'a besoin de tourner.</p>
+    <p class="muted small" id="envLine"></p>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

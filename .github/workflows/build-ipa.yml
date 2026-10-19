@@ -1,0 +1,85 @@
+# Fabrique un .ipa NON SIGNÉ du prototype Training, pour installation par
+# SideStore (qui signe sur l'iPhone avec l'Apple ID gratuit de Grégoire).
+# Vit sur la branche proto-capacitor du dépôt training. Dépôt public :
+# les minutes macOS GitHub Actions sont gratuites.
+name: build-ipa-proto
+
+on:
+  push:
+    branches: [proto-capacitor]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Installer les dépendances et synchroniser iOS
+        run: |
+          npm ci || npm install
+          npx cap sync ios
+
+      - name: Compiler l'app sans signature
+        run: |
+          cd ios/App
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath "$RUNNER_TEMP/build" \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Assembler le .ipa non signé
+        run: |
+          APP=$(find "$RUNNER_TEMP/build" -name '*.app' -type d | head -1)
+          echo "App trouvée : $APP"
+          # Garantir que les sons d'annonces sont à la RACINE du bundle
+          # (UNNotificationSound les cherche là, pas dans public/).
+          cp -f www/sounds/*.wav "$APP/" || true
+          rm -rf Payload Training-Proto-unsigned.ipa
+          mkdir Payload
+          cp -R "$APP" Payload/
+          zip -qry Training-Proto-unsigned.ipa Payload
+          unzip -l Training-Proto-unsigned.ipa | grep -E 'annonce-.*\.wav' | head -12
+
+      - name: Publier l'artefact du run
+        uses: actions/upload-artifact@v4
+        with:
+          name: Training-Proto-unsigned-ipa
+          path: Training-Proto-unsigned.ipa
+
+      - name: Mettre à jour la Release "proto" et la source SideStore
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view proto || gh release create proto --title "Prototype Training (SideStore)" --notes "Builds non signés du prototype. À installer/mettre à jour via SideStore." --prerelease
+          gh release upload proto Training-Proto-unsigned.ipa --clobber
+          IPA_URL="https://github.com/${{ github.repository }}/releases/download/proto/Training-Proto-unsigned.ipa"
+          cat > apps.json << JSON
+          {
+            "name": "Training (prototype)",
+            "identifier": "com.gregoire.training.source",
+            "apps": [
+              {
+                "name": "Training Proto",
+                "bundleIdentifier": "com.gregoire.training",
+                "developerName": "Grégoire Painchaud",
+                "version": "0.1.${{ github.run_number }}",
+                "versionDate": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+                "downloadURL": "$IPA_URL",
+                "localizedDescription": "Prototype : annonces vocales d'entraînement, écran verrouillé.",
+                "iconURL": "https://gregoirepainchaud-debug.github.io/training/logobicep.png",
+                "size": $(stat -f%z Training-Proto-unsigned.ipa 2>/dev/null || stat -c%s Training-Proto-unsigned.ipa)
+              }
+            ],
+            "news": []
+          }
+          JSON
+          echo "Source SideStore générée :"; cat apps.json
