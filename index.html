@@ -1,465 +1,798 @@
 <!doctype html>
 <html lang="fr-CA">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#111827" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Entraînement" />
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="logobicep.png" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <title>Mon entraînement – 16 semaines</title>
-  <style>
-    :root{
-      --bg:#0f172a;--card:#111827;--card2:#1f2937;--text:#f9fafb;
-      --muted:#cbd5e1;--accent:#22c55e;--accent2:#16a34a;
-      --danger:#ef4444;--line:#334155;--blue:#38bdf8;--gold:#fbbf24;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#0f172a,#111827);color:var(--text);min-height:100vh}
-    .wrap{max-width:760px;margin:0 auto;padding:18px 16px 48px}
-    h1{font-size:1.8rem;margin:8px 0 4px} h2{font-size:1.25rem;margin:0 0 14px} p{line-height:1.45}
-    .muted{color:var(--muted)} .small{font-size:.9rem}
-    .card{background:rgba(17,24,39,.96);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:14px;box-shadow:0 12px 30px rgba(0,0,0,.22)}
-    .topline{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
-    .badge{display:inline-flex;align-items:center;background:#052e16;color:#bbf7d0;border:1px solid #166534;padding:6px 10px;border-radius:999px;font-size:.88rem;font-weight:700}
-    .progress{height:12px;border-radius:999px;background:#0b1220;overflow:hidden;margin:14px 0 4px;border:1px solid #1e293b}
-    .progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#86efac);transition:width .25s ease}
-    .timer-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
-    .timer-box{background:#0b1220;border:1px solid #263244;border-radius:14px;padding:12px;text-align:center}
-    .timer-label{color:#94a3b8;font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
-    .timer-value{font-size:2rem;font-weight:900;font-variant-numeric:tabular-nums;margin-top:3px}
-    .timer-value.master{color:var(--gold)} .timer-value.phase{color:var(--blue)}
-    .exercise{font-size:2rem;font-weight:850;margin:18px 0 8px;line-height:1.1}
-    .instruction{font-size:1.08rem;color:var(--muted);min-height:52px}
-    .counter{margin-top:12px;font-size:.95rem;color:#94a3b8}
-    button{width:100%;border:0;border-radius:14px;padding:15px 16px;font-size:1.05rem;font-weight:800;cursor:pointer;margin-top:12px}
-    .primary{background:var(--accent);color:#052e16}.primary:active{background:var(--accent2);color:white}
-    .secondary{background:#334155;color:white}.danger{background:#7f1d1d;color:#fee2e2}.outline{background:transparent;color:#cbd5e1;border:1px solid #475569}
-    .hidden{display:none!important}.done{font-size:2rem;text-align:center;font-weight:900;margin:18px 0 8px}
-    .ready{text-align:center;padding:12px 0}.ready-icon{width:88px;height:88px;border-radius:22px;margin:4px auto 12px;display:block}
-    details{margin-top:14px} summary{cursor:pointer;font-weight:800} ul{padding-left:22px} li{margin:.45rem 0}
-    .history-item{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #263244}
-    input{width:100%;background:#0b1220;color:white;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:1rem}
-    label{display:block;margin:10px 0 6px;color:var(--muted);font-weight:700}
-    .summary-stat{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #263244}
-    .footer{margin-top:22px;text-align:center;color:#64748b;font-size:.85rem}
-    @media(max-width:430px){.timer-value{font-size:1.7rem}.exercise{font-size:1.75rem}}
-  </style>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#111827">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
+
+  <meta
+    name="apple-mobile-web-app-title"
+    content="Entraînement"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href="./apple-touch-icon.png"
+  >
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="./logobicep.png"
+  >
+
+  <link
+    rel="manifest"
+    href="./manifest.webmanifest"
+  >
+
+  <title>Mon entraînement</title>
+
+  <link
+    rel="stylesheet"
+    href="./styles.css"
+  >
 </head>
+
 <body>
+
 <div class="wrap">
-  <div class="topline">
+
+  <div class="head">
+
+    <img
+      src="./logobicep.png"
+      class="logo"
+      alt="Entraînement musculaire"
+    >
+
     <div>
+
       <h1>Mon entraînement</h1>
-      <div class="muted">Programme de 16 semaines · début le 3 août 2026</div>
+
+      <div
+        style="
+          color: white;
+          font-size: 0.85rem;
+          font-weight: 700;
+          margin-top: 3px;
+          margin-bottom: 4px;
+        "
+      >
+        V. 14
+      </div>
+
+      <div class="muted">
+        Renforcement · marche/course par cycles · suivi hebdomadaire
+      </div>
+
     </div>
-    <div class="badge" id="weekBadge">Semaine 1</div>
+
   </div>
 
-  <section class="card" id="todayCard">
-    <h2 id="dateTitle">Aujourd’hui</h2>
-    <div id="sessionSummary" class="muted"></div>
-    <div class="progress"><div id="progressBar"></div></div>
-    <div id="progressText" class="small muted"></div>
 
-    <div id="restDay" class="hidden">
-      <div class="done">Pas d’exercices aujourd’hui mon chanceux!</div>
-      <p class="muted" style="text-align:center">Repos complet aujourd’hui.</p>
-    </div>
+  <div class="tabs">
 
-    <div id="readyArea" class="hidden ready">
-      <img class="ready-icon" src="logobicep.png" alt="Bras musclé" />
-      <p id="readyText" class="muted"></p>
-      <button class="primary" id="startBtn">Débuter la séance</button>
-    </div>
+    <button
+      class="tab active"
+      data-view="today"
+      type="button"
+    >
+      Aujourd’hui
+    </button>
 
-    <div id="workoutArea" class="hidden">
-      <div class="timer-grid">
-        <div class="timer-box">
-          <div class="timer-label">Temps total</div>
-          <div class="timer-value master" id="masterTimer">00:00</div>
+    <button
+      class="tab"
+      data-view="history"
+      type="button"
+    >
+      Suivi
+    </button>
+
+    <button
+      class="tab"
+      data-view="transfer"
+      type="button"
+    >
+      Importer / exporter
+    </button>
+
+  </div>
+
+
+  <main id="todayView">
+
+    <section
+      id="resumeSessionBanner"
+      class="resumeBanner hidden"
+      aria-live="polite"
+    >
+
+      <div>
+
+        <strong id="resumeSessionTitle">
+          Séance en cours
+        </strong>
+
+        <div
+          id="resumeSessionText"
+          class="small muted"
+        ></div>
+
+      </div>
+
+      <button
+        id="resumeAudioBtn"
+        class="primary"
+        type="button"
+      >
+        Réactiver l’audio
+      </button>
+
+    </section>
+
+
+    <section class="card">
+
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          gap: 10px;
+          align-items: start;
+        "
+      >
+
+        <div>
+
+          <h2 id="dateTitle"></h2>
+
+          <div
+            id="dayLabel"
+            class="muted"
+          ></div>
+
         </div>
-        <div class="timer-box">
-          <div class="timer-label" id="phaseTimerLabel">Exercice</div>
-          <div class="timer-value phase" id="phaseTimer">00:00</div>
+
+        <span
+          id="programBadge"
+          class="badge"
+        >
+          Programme
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <section
+      class="card"
+      id="strengthCard"
+    >
+
+      <h2>Renforcement</h2>
+
+      <div
+        id="strengthNone"
+        class="muted hidden"
+      >
+        Aucun renforcement prévu aujourd’hui.
+      </div>
+
+
+      <div id="strengthReady">
+
+        <div id="strengthSummary"></div>
+
+        <button
+          id="startStrength"
+          class="startLauncher strengthLauncher"
+          type="button"
+        >
+
+          <img
+            src="./logobicep.png"
+            alt=""
+            class="startLauncherIcon"
+          >
+
+          <span class="startLauncherText">
+
+            <strong>
+              Débuter les exercices
+            </strong>
+
+            <small>
+              Renforcement musculaire
+            </small>
+
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <div
+        id="strengthActive"
+        class="hidden"
+      >
+
+        <div class="timerGrid">
+
+          <div class="timerBox">
+
+            <div class="label">
+              Temps total
+            </div>
+
+            <div
+              id="strengthTotal"
+              class="time gold"
+            >
+              00:00
+            </div>
+
+          </div>
+
+
+          <div class="timerBox">
+
+            <div
+              id="strengthPhaseLabel"
+              class="label"
+            >
+              Exercice
+            </div>
+
+            <div
+              id="strengthPhase"
+              class="time blue"
+            >
+              00:00
+            </div>
+
+          </div>
+
         </div>
+
+
+        <div class="progress">
+          <div id="strengthProgress"></div>
+        </div>
+
+
+        <div
+          id="strengthExercise"
+          class="exercise"
+        ></div>
+
+
+        <p
+          id="strengthInstruction"
+          class="muted"
+        ></p>
+
+
+        <div
+          id="strengthCounter"
+          class="small muted"
+        ></div>
+
+
+        <div
+          id="nextExercisePreview"
+          class="nextExercisePreview hidden"
+          aria-live="polite"
+        >
+
+          <div class="nextExercisePreviewHeader">
+            Prochain exercice
+          </div>
+
+          <img
+            id="nextExerciseImage"
+            class="nextExerciseImage"
+            src=""
+            alt=""
+          >
+
+          <div
+            id="nextExerciseName"
+            class="nextExerciseName"
+          ></div>
+
+          <div
+            id="nextExerciseTarget"
+            class="nextExerciseTarget"
+          ></div>
+
+          <p
+            id="nextExerciseInstruction"
+            class="muted small"
+          ></p>
+
+        </div>
+
+
+        <button
+          id="strengthAction"
+          class="primary"
+          type="button"
+        >
+          Repos
+        </button>
+
+        <button
+          id="cancelStrength"
+          class="outline"
+          type="button"
+        >
+          Annuler la séance
+        </button>
+
       </div>
 
-      <div id="exercisePanel">
-        <div class="exercise" id="exerciseName"></div>
-        <div class="instruction" id="exerciseInstruction"></div>
-        <div class="counter" id="exerciseCounter"></div>
-        <button class="primary" id="finishExerciseBtn">Repos</button>
+
+      <div
+        id="strengthDone"
+        class="hidden"
+      >
+
+        <div
+          class="exercise"
+          style="text-align: center;"
+        >
+          Séance terminée 🎉
+        </div>
+
+        <div id="strengthStats"></div>
+
+        <button
+          id="redoStrength"
+          class="secondary"
+          type="button"
+        >
+          Refaire la séance
+        </button>
+
       </div>
 
-      <div id="restPanel" class="hidden">
-        <div class="exercise" style="text-align:center">Repos</div>
-        <p class="muted" style="text-align:center">Prends le temps qu’il te faut. Le chrono total continue.</p>
-        <button class="primary" id="nextExerciseBtn">Prochain exercice</button>
+    </section>
+
+
+    <section
+      class="card"
+      id="cardioCard"
+    >
+
+      <h2>Marche / course</h2>
+
+      <div
+        id="cardioNone"
+        class="muted hidden"
+      >
+        Aucun cardio prévu aujourd’hui.
       </div>
 
-      <button class="outline" id="cancelSessionBtn">Annuler la séance en cours</button>
-    </div>
 
-    <div id="completeArea" class="hidden">
-      <div class="done">Séance terminée 🎉</div>
-      <div id="completeStats"></div>
-      <p class="muted" style="text-align:center">Ta progression a été sauvegardée sur cet appareil.</p>
-      <button class="secondary" id="restartBtn">Refaire la séance</button>
-    </div>
-  </section>
+      <div id="cardioReady">
 
-  <section class="card">
-    <h2>Cardio du jour</h2>
-    <div id="cardioDetails"></div>
-    <button class="secondary" id="markCardioBtn">Marquer le cardio comme terminé</button>
-  </section>
+        <div id="cardioPrescription"></div>
 
-  <section class="card">
-    <details>
-      <summary>Voir la technique des exercices</summary>
-      <ul>
-        <li><strong>Pushups :</strong> corps droit, mains légèrement plus larges que les épaules. Arrête avant que la technique se détériore.</li>
-        <li><strong>Squats :</strong> recule les hanches comme pour t’asseoir, talons au sol, genoux dans la direction des orteils.</li>
-        <li><strong>Superman :</strong> couché sur le ventre, lève doucement les bras et les jambes sans forcer le cou.</li>
-        <li><strong>Fentes arrière :</strong> recule un pied, descends doucement, puis pousse dans le pied avant pour revenir.</li>
-        <li><strong>Dips triceps :</strong> utilise deux chaises lourdes et parfaitement stables, idéalement bloquées contre un mur. Descends peu au début. Une seule chaise stable avec les pieds au sol est une variante plus simple.</li>
-        <li><strong>Ponts fessiers :</strong> couché sur le dos, genoux pliés, pousse les hanches vers le plafond et serre les fessiers.</li>
-        <li><strong>Planche :</strong> avant-bras au sol, corps droit, abdominaux serrés. Arrête si le bas du dos s’affaisse.</li>
-      </ul>
-    </details>
-  </section>
+        <button
+          id="startCardio"
+          class="startLauncher cardioLauncher"
+          type="button"
+        >
 
-  <section class="card">
-    <h2>Structure de la semaine</h2>
-    <ul>
-      <li><strong>Lundi, mercredi, vendredi :</strong> deux circuits principaux + cardio par intervalles.</li>
-      <li><strong>Mardi, jeudi :</strong> deux circuits plus légers + cardio facile.</li>
-      <li><strong>Samedi :</strong> cardio facile seulement.</li>
-      <li><strong>Dimanche :</strong> repos complet.</li>
-    </ul>
-  </section>
+          <span class="startLauncherPicture">
 
-  <section class="card">
-    <h2>Historique récent</h2>
-    <div id="history"></div>
-  </section>
+            <img
+              id="runnerLauncherIcon"
+              src="./IconeCoureur.png"
+              alt="Course"
+              class="startLauncherIcon"
+            >
 
-  <section class="card">
-    <h2>Réglages</h2>
-    <label for="dateOverride">Tester une autre date</label>
-    <input id="dateOverride" type="date" />
-    <button class="secondary" id="applyDateBtn">Charger cette date</button>
-    <button class="danger" id="resetBtn">Effacer toute la progression</button>
-  </section>
+          </span>
 
-  <div class="footer">Les données et les chronos sont conservés dans le stockage local du navigateur.</div>
+          <span class="startLauncherText">
+
+            <strong>
+              Débuter la marche/course
+            </strong>
+
+            <small>
+              Cardio par intervalles
+            </small>
+
+          </span>
+
+        </button>
+
+      </div>
+
+
+      <div
+        id="cardioActive"
+        class="hidden"
+      >
+
+        <div class="timerGrid">
+
+          <div class="timerBox">
+
+            <div class="label">
+              Temps total
+            </div>
+
+            <div
+              id="cardioTotal"
+              class="time gold"
+            >
+              00:00
+            </div>
+
+          </div>
+
+
+          <div class="timerBox">
+
+            <div class="label">
+              Temps restant
+            </div>
+
+            <div
+              id="cardioRemaining"
+              class="time blue"
+            >
+              00:00
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="cardioPhase"
+          class="phase warm"
+        >
+          Échauffement
+        </div>
+
+
+        <button
+          id="earlyCardio"
+          class="secondary"
+          type="button"
+        >
+          Terminé plus tôt
+        </button>
+
+        <button
+          id="stopCardio"
+          class="danger"
+          type="button"
+        >
+          Terminer maintenant
+        </button>
+
+      </div>
+
+
+      <div
+        id="cardioDone"
+        class="hidden"
+      >
+
+        <div
+          class="exercise"
+          style="text-align: center;"
+        >
+          Cardio terminé ✓
+        </div>
+
+        <div id="cardioStats"></div>
+
+        <button
+          id="redoCardio"
+          class="secondary"
+          type="button"
+        >
+          Refaire le cardio
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <section class="card">
+
+      <h2>Comment ça s’est passé?</h2>
+
+      <div
+        class="rating"
+        id="difficulty"
+      >
+
+        <button
+          data-v="1"
+          type="button"
+        >
+          Facile
+        </button>
+
+        <button
+          data-v="2"
+          type="button"
+        >
+          Correct
+        </button>
+
+        <button
+          data-v="3"
+          type="button"
+        >
+          Difficile
+        </button>
+
+      </div>
+
+
+      <label for="weight">
+        Poids facultatif (lb)
+      </label>
+
+      <input
+        id="weight"
+        type="number"
+        inputmode="decimal"
+        min="50"
+        max="500"
+        step="0.1"
+        placeholder="Ex. 190"
+      >
+
+
+      <label for="note">
+        Note de la journée
+      </label>
+
+      <textarea
+        id="note"
+        placeholder="Ex.: jambes plus sollicitées, reflux pendant la course, bonne énergie…"
+      ></textarea>
+
+
+      <button
+        id="saveNote"
+        class="secondary"
+        type="button"
+      >
+        Sauvegarder la note
+      </button>
+
+    </section>
+
+  </main>
+
+
+  <main
+    id="historyView"
+    class="hidden"
+  >
+
+    <section class="card">
+
+      <h2>Progression par exercice</h2>
+
+      <label for="exerciseChartSelect">
+        Exercice
+      </label>
+
+      <select id="exerciseChartSelect"></select>
+
+      <div
+        id="exerciseChart"
+        class="chartWrap"
+      ></div>
+
+    </section>
+
+
+    <section class="card">
+
+      <h2>Progression du poids</h2>
+
+      <div
+        id="weightChart"
+        class="chartWrap"
+      ></div>
+
+    </section>
+
+
+    <section class="card">
+
+      <h2>Historique</h2>
+
+      <div id="historyList"></div>
+
+    </section>
+
+
+    <section class="card">
+
+      <details>
+
+        <summary>
+          Technique des exercices
+        </summary>
+
+        <ul id="exerciseTechniqueList"></ul>
+
+      </details>
+
+    </section>
+
+  </main>
+
+
+  <main
+    id="transferView"
+    class="hidden"
+  >
+
+    <section class="card">
+
+      <h2>Importer un programme de 7 jours</h2>
+
+      <p class="muted">
+        Colle une chaîne GP1. Elle peut contenir jusqu’à 7 jours
+        complets de musculation et de cardio. L’app affiche un aperçu
+        avant l’installation.
+      </p>
+
+      <textarea
+        id="importText"
+        placeholder="GP1.…"
+      ></textarea>
+
+      <button
+        id="previewImport"
+        class="primary"
+        type="button"
+      >
+        Lire le programme
+      </button>
+
+      <div id="importPreview"></div>
+
+    </section>
+
+
+    <section class="card">
+
+      <h2>Exporter mon suivi</h2>
+
+      <p class="muted">
+        Tu peux exporter n’importe quand. La chaîne GX1 contient le
+        programme actif, les séances, les chronos détaillés, les cycles,
+        la difficulté, le poids et tes notes.
+      </p>
+
+      <button
+        id="exportBtn"
+        class="primary"
+        type="button"
+      >
+        Créer la chaîne d’export
+      </button>
+
+      <textarea
+        id="exportText"
+        readonly
+      ></textarea>
+
+      <button
+        id="copyExport"
+        class="secondary"
+        type="button"
+      >
+        Copier
+      </button>
+
+    </section>
+
+
+    <section class="card">
+
+      <h2>Réglages</h2>
+
+      <div
+        id="catalogStatus"
+        class="muted small"
+      ></div>
+
+      <div
+        id="formatStatus"
+        class="muted small"
+        style="margin-top: 6px;"
+      ></div>
+
+      <div
+        id="audioStatus"
+        class="muted small"
+        style="margin-top: 6px;"
+      >
+        Audio local : sera vérifié au premier démarrage.
+      </div>
+
+      <div
+        id="storageStatus"
+        class="muted small"
+        style="margin-top: 6px;"
+      ></div>
+
+      <div
+        id="offlineStatus"
+        class="muted small"
+        style="margin-top: 6px;"
+      ></div>
+
+
+      <button
+        id="testAudio"
+        class="secondary"
+        type="button"
+      >
+        Tester la cloche et la voix
+      </button>
+
+      <button
+        id="restoreProgram"
+        class="secondary"
+        type="button"
+      >
+        Revenir au programme précédent
+      </button>
+
+      <button
+        id="resetAll"
+        class="danger"
+        type="button"
+      >
+        Effacer toutes les données
+      </button>
+
+    </section>
+
+  </main>
+
 </div>
 
-<script>
-(() => {
-  const START_DATE = new Date("2026-08-03T12:00:00");
-  const STORAGE_KEY = "gregoire_training_16w_v4";
-  const LEGACY_KEYS = ["gregoire_training_12w_v1"];
-  const DAY_MS = 86400000;
-  const EXERCISES_PER_CIRCUIT = 7;
 
-  const strengthByWeek = [
-    null,
-    {pushups:18,squats:15,superman:12,lunges:8,dips:6,bridges:15,plank:25},
-    {pushups:20,squats:16,superman:13,lunges:8,dips:7,bridges:16,plank:30},
-    {pushups:22,squats:18,superman:14,lunges:9,dips:8,bridges:18,plank:35},
-    {pushups:16,squats:14,superman:12,lunges:7,dips:5,bridges:14,plank:25},
-    {pushups:22,squats:20,superman:15,lunges:10,dips:8,bridges:20,plank:35},
-    {pushups:24,squats:22,superman:16,lunges:10,dips:9,bridges:22,plank:40},
-    {pushups:26,squats:24,superman:18,lunges:11,dips:10,bridges:24,plank:45},
-    {pushups:20,squats:18,superman:14,lunges:8,dips:7,bridges:18,plank:30},
-    {pushups:26,squats:24,superman:18,lunges:12,dips:10,bridges:24,plank:45},
-    {pushups:28,squats:26,superman:20,lunges:12,dips:11,bridges:26,plank:50},
-    {pushups:30,squats:28,superman:22,lunges:13,dips:12,bridges:28,plank:55},
-    {pushups:22,squats:20,superman:16,lunges:9,dips:8,bridges:20,plank:35},
-    {pushups:28,squats:28,superman:22,lunges:14,dips:11,bridges:28,plank:60},
-    {pushups:30,squats:30,superman:24,lunges:14,dips:12,bridges:30,plank:65},
-    {pushups:30,squats:32,superman:25,lunges:15,dips:13,bridges:32,plank:70},
-    {pushups:26,squats:26,superman:20,lunges:12,dips:10,bridges:26,plank:50}
-  ];
+<script
+  type="module"
+  src="./js/app.js"
+></script>
 
-  const cardioByWeek = [
-    null,
-    {run:30,walk:60,easy:30,distance:5},
-    {run:40,walk:60,easy:35,distance:5},
-    {run:50,walk:60,easy:40,distance:5},
-    {run:30,walk:60,easy:35,distance:4,recovery:true},
-    {run:60,walk:60,easy:40,distance:5},
-    {run:75,walk:60,easy:45,distance:5},
-    {run:90,walk:60,easy:45,distance:5},
-    {run:60,walk:60,easy:40,distance:4,recovery:true},
-    {run:120,walk:60,easy:45,distance:5},
-    {run:180,walk:60,easy:50,distance:5},
-    {run:240,walk:60,easy:50,distance:5},
-    {run:120,walk:60,easy:45,distance:4,recovery:true},
-    {run:300,walk:60,easy:50,distance:5},
-    {run:480,walk:60,easy:50,distance:5},
-    {run:720,walk:60,easy:55,distance:5},
-    {run:300,walk:60,easy:40,distance:5,test:true}
-  ];
-
-  // 0=dimanche ... 6=samedi
-  const weeklyPlan = {
-    0:{strength:false,cardio:"none",label:"Repos complet"},
-    1:{strength:"main",cardio:"interval",label:"Renforcement principal + intervalles"},
-    2:{strength:"light",cardio:"easy",label:"Renforcement léger + cardio facile"},
-    3:{strength:"main",cardio:"interval",label:"Renforcement principal + intervalles"},
-    4:{strength:"light",cardio:"easy",label:"Renforcement léger + cardio facile"},
-    5:{strength:"main",cardio:"interval",label:"Renforcement principal + intervalles"},
-    6:{strength:false,cardio:"easyLong",label:"Cardio facile"}
-  };
-
-  let appDate = new Date(); appDate.setHours(12,0,0,0);
-  let state = loadState();
-  let sequence = [];
-  let tickHandle = null;
-
-  const $ = id => document.getElementById(id);
-
-  function defaultState(){ return {version:4,days:{},seededAug3:false}; }
-  function loadState(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(raw) return {...defaultState(),...JSON.parse(raw)};
-      for(const key of LEGACY_KEYS){
-        const oldRaw = localStorage.getItem(key);
-        if(oldRaw){
-          const old = JSON.parse(oldRaw);
-          return {...defaultState(),days:old.days||{}};
-        }
-      }
-    }catch(e){ console.warn("Impossible de lire la progression",e); }
-    return defaultState();
-  }
-  function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-  function seedAug3AsCompleted(){
-    if(state.seededAug3) return;
-    const key = "2026-08-03";
-    const old = state.days[key] || {};
-    state.days[key] = {
-      ...old,
-      strengthComplete:true,
-      cardioComplete:true,
-      completedAt:old.completedAt || Date.parse("2026-08-03T21:33:00-04:00"),
-      importedCompletion:true,
-      activeSession:null
-    };
-    state.seededAug3 = true;
-    saveState();
-  }
-  seedAug3AsCompleted();
-
-  function dateKey(d){
-    const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
-    return `${y}-${m}-${day}`;
-  }
-  function diffDays(a,b){
-    const aa=new Date(a);aa.setHours(12,0,0,0);const bb=new Date(b);bb.setHours(12,0,0,0);
-    return Math.floor((aa-bb)/DAY_MS);
-  }
-  function getWeek(d){
-    const n=diffDays(d,START_DATE); if(n<0) return 0; return Math.min(16,Math.floor(n/7)+1);
-  }
-  function fmtSeconds(total){
-    total=Math.max(0,Math.floor(total)); const h=Math.floor(total/3600),m=Math.floor((total%3600)/60),s=total%60;
-    return h>0 ? `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}` : `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
-  }
-  function readableDuration(s){
-    if(s<60) return `${s} secondes`; const m=Math.floor(s/60),r=s%60; return r?`${m} min ${r} s`:`${m} minute${m>1?"s":""}`;
-  }
-  function scaled(value,mode,min=1){ return mode==="light"?Math.max(min,Math.round(value*0.65)):value; }
-
-  function buildSequence(week,mode){
-    const p=strengthByWeek[week]||strengthByWeek[16];
-    const items=[
-      {name:`${scaled(p.pushups,mode,8)} pushups`,instruction:"Répétitions propres. Garde environ deux répétitions en réserve.",group:"Haut du corps"},
-      {name:`${scaled(p.squats,mode,10)} squats`,instruction:"Descends de façon contrôlée, puis remonte sans rebondir.",group:"Bas du corps"},
-      {name:`${scaled(p.superman,mode,8)} superman`,instruction:"Lève doucement les bras et les jambes, puis redescends sans élan.",group:"Haut du corps / dos"},
-      {name:`${scaled(p.lunges,mode,5)} fentes arrière par jambe`,instruction:"Alterner les jambes. Reste stable et garde le mouvement confortable.",group:"Bas du corps"},
-      {name:`${scaled(p.dips,mode,4)} dips triceps`,instruction:"Utilise des chaises parfaitement stables. Mouvement peu profond au début.",group:"Haut du corps"},
-      {name:`${scaled(p.bridges,mode,10)} ponts fessiers`,instruction:"Serre les fessiers en haut, puis redescends lentement.",group:"Bas du corps"},
-      {name:`Planche · ${readableDuration(scaled(p.plank,mode,15))}`,instruction:"Garde le corps droit et arrête avant que le bas du dos s’affaisse.",group:"Tronc"}
-    ];
-    const out=[];
-    for(let circuit=1;circuit<=2;circuit++) items.forEach((item,index)=>out.push({...item,circuit,circuits:2,indexInCircuit:index+1}));
-    return out;
-  }
-
-  function getDayContext(){
-    const week=getWeek(appDate); const plan=weeklyPlan[appDate.getDay()]; const key=dateKey(appDate);
-    const day=state.days[key]||{}; return {week,plan,key,day};
-  }
-
-  function render(){
-    stopTick();
-    const {week,plan,key,day}=getDayContext();
-    sequence = week>0 && plan.strength ? buildSequence(week,plan.strength) : [];
-    $("dateTitle").textContent=appDate.toLocaleDateString("fr-CA",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-    $("weekBadge").textContent=week===0?"Avant le départ":`Semaine ${week}`;
-    $("sessionSummary").textContent=week===0?"Le programme commence le lundi 3 août 2026.":plan.label;
-
-    ["restDay","readyArea","workoutArea","completeArea"].forEach(id=>$(id).classList.add("hidden"));
-    $("progressBar").style.width="0%"; $("progressText").textContent="";
-
-    if(week===0 || (!plan.strength && plan.cardio==="none")){
-      $("restDay").classList.remove("hidden");
-      $("progressBar").style.width=week===0?"0%":"100%";
-    }else if(plan.strength){
-      if(day.activeSession){
-        $("workoutArea").classList.remove("hidden");
-        renderActiveSession(day.activeSession);
-        startTick();
-      }else if(day.strengthComplete){
-        $("completeArea").classList.remove("hidden");
-        renderComplete(day);
-        $("progressBar").style.width="100%";
-        $("progressText").textContent=day.importedCompletion?"Séance déjà effectuée aujourd’hui":"Renforcement terminé";
-      }else{
-        $("readyArea").classList.remove("hidden");
-        $("readyText").textContent=`Deux circuits de ${EXERCISES_PER_CIRCUIT} exercices · séance ${plan.strength==="light"?"légère":"principale"}. Le chrono total commencera au bouton Débuter.`;
-      }
-    }else{
-      $("restDay").classList.remove("hidden");
-      $("restDay").querySelector(".done").textContent="Cardio seulement aujourd’hui";
-      $("restDay").querySelector("p").textContent="Aucune séance de renforcement prévue.";
-      $("progressBar").style.width=day.cardioComplete?"100%":"0%";
-      $("progressText").textContent=day.cardioComplete?"Cardio terminé":"";
-    }
-    renderCardio(week,plan,day);
-    renderHistory();
-  }
-
-  function startSession(){
-    const {key,day}=getDayContext(); const now=Date.now();
-    state.days[key]={...day,strengthComplete:false,importedCompletion:false,activeSession:{currentIndex:0,phase:"exercise",sessionStart:now,phaseStart:now,exerciseTimes:[],restTimes:[]}};
-    saveState(); render();
-  }
-
-  function renderActiveSession(session){
-    const idx=Math.min(session.currentIndex,sequence.length-1); const ex=sequence[idx];
-    const completed=Math.max(0,session.currentIndex);
-    $("progressBar").style.width=`${(completed/sequence.length)*100}%`;
-    $("progressText").textContent=`${completed} exercice${completed!==1?"s":""} terminé${completed!==1?"s":""} sur ${sequence.length}`;
-    if(session.phase==="rest"){
-      $("exercisePanel").classList.add("hidden"); $("restPanel").classList.remove("hidden");
-      $("phaseTimerLabel").textContent="Repos";
-    }else{
-      $("restPanel").classList.add("hidden"); $("exercisePanel").classList.remove("hidden");
-      $("phaseTimerLabel").textContent="Exercice";
-      $("exerciseName").textContent=ex.name;
-      $("exerciseInstruction").textContent=ex.instruction;
-      $("exerciseCounter").textContent=`Circuit ${ex.circuit} sur 2 · exercice ${ex.indexInCircuit} sur ${EXERCISES_PER_CIRCUIT} · ${ex.group}`;
-      $("finishExerciseBtn").textContent=idx===sequence.length-1?"Terminer la séance":"Repos";
-    }
-    updateTimers();
-  }
-
-  function finishExercise(){
-    const {key,day}=getDayContext(); const session=day.activeSession; if(!session) return;
-    const now=Date.now(); const elapsed=Math.floor((now-session.phaseStart)/1000);
-    session.exerciseTimes[session.currentIndex]=elapsed;
-    if(session.currentIndex>=sequence.length-1){
-      const total=Math.floor((now-session.sessionStart)/1000);
-      state.days[key]={...day,strengthComplete:true,completedAt:now,importedCompletion:false,activeSession:null,strengthResult:{totalSeconds:total,exerciseTimes:session.exerciseTimes,restTimes:session.restTimes}};
-      saveState(); render(); return;
-    }
-    session.phase="rest"; session.phaseStart=now; state.days[key]={...day,activeSession:session}; saveState(); renderActiveSession(session);
-  }
-
-  function nextExercise(){
-    const {key,day}=getDayContext(); const session=day.activeSession; if(!session||session.phase!=="rest") return;
-    const now=Date.now(); session.restTimes[session.currentIndex]=Math.floor((now-session.phaseStart)/1000);
-    session.currentIndex+=1; session.phase="exercise"; session.phaseStart=now;
-    state.days[key]={...day,activeSession:session}; saveState(); renderActiveSession(session);
-  }
-
-  function cancelSession(){
-    if(!confirm("Annuler la séance en cours et remettre les chronos à zéro?")) return;
-    const {key,day}=getDayContext(); state.days[key]={...day,activeSession:null,strengthComplete:false,importedCompletion:false}; saveState(); render();
-  }
-
-  function restartSession(){
-    const {key,day}=getDayContext(); state.days[key]={...day,activeSession:null,strengthComplete:false,importedCompletion:false,strengthResult:null}; saveState(); render();
-  }
-
-  function startTick(){ stopTick(); tickHandle=setInterval(updateTimers,250); }
-  function stopTick(){ if(tickHandle){clearInterval(tickHandle);tickHandle=null;} }
-  function updateTimers(){
-    const {day}=getDayContext(); const session=day.activeSession; if(!session) return;
-    const now=Date.now(); $("masterTimer").textContent=fmtSeconds((now-session.sessionStart)/1000); $("phaseTimer").textContent=fmtSeconds((now-session.phaseStart)/1000);
-  }
-
-  function renderComplete(day){
-    if(day.importedCompletion){
-      $("completeStats").innerHTML='<p class="muted" style="text-align:center">Les exercices et le cardio du 3 août ont été marqués comme déjà complétés, comme demandé.</p>';
-      return;
-    }
-    const r=day.strengthResult;
-    if(!r){ $("completeStats").innerHTML=""; return; }
-    const exerciseTotal=(r.exerciseTimes||[]).reduce((a,b)=>a+(b||0),0); const restTotal=(r.restTimes||[]).reduce((a,b)=>a+(b||0),0);
-    $("completeStats").innerHTML=`
-      <div class="summary-stat"><span>Temps total</span><strong>${fmtSeconds(r.totalSeconds||0)}</strong></div>
-      <div class="summary-stat"><span>Temps en exercice</span><strong>${fmtSeconds(exerciseTotal)}</strong></div>
-      <div class="summary-stat"><span>Temps de repos</span><strong>${fmtSeconds(restTotal)}</strong></div>`;
-  }
-
-  function renderCardio(week,plan,day){
-    const box=$("cardioDetails"),btn=$("markCardioBtn");
-    if(week===0||plan.cardio==="none"){
-      box.innerHTML='<p class="muted">Aucun cardio prévu aujourd’hui.</p>'; btn.classList.add("hidden"); return;
-    }
-    btn.classList.remove("hidden"); btn.textContent=day.cardioComplete?"Cardio terminé ✓":"Marquer le cardio comme terminé";
-    const c=cardioByWeek[week]||cardioByWeek[16];
-    if(plan.cardio==="interval"){
-      if(c.test && appDate.getDay()===5){
-        box.innerHTML='<p><strong>Test de fin de programme :</strong> 10 minutes de marche, puis tente le 5 km le plus continu et confortable possible. Marche dès que nécessaire.</p><p class="muted small">Ce n’est pas un sprint; cherche surtout une allure régulière.</p>';
-      }else{
-        box.innerHTML=`<p><strong>Échauffement :</strong> 10 minutes de marche.</p><p><strong>Intervalles :</strong> ${readableDuration(c.run)} de jogging léger, puis ${readableDuration(c.walk)} de marche rapide.</p><p><strong>Distance :</strong> ${c.distance} km${c.recovery?" · semaine allégée":""}.</p><p class="muted small">Termine en ayant l’impression que tu aurais pu faire un intervalle de plus.</p>`;
-      }
-    }else if(plan.cardio==="easy"){
-      box.innerHTML=`<p><strong>Cardio facile :</strong> marche rapide pendant environ ${c.easy} minutes.</p><p class="muted small">Intensité où tu peux encore parler en phrases complètes.</p>`;
-    }else{
-      box.innerHTML=`<p><strong>Sortie facile :</strong> marche rapide ou marche-jogging très confortable pendant ${c.easy} à ${c.easy+10} minutes.</p><p class="muted small">Aucune recherche de record aujourd’hui.</p>`;
-    }
-  }
-
-  function renderHistory(){
-    const entries=Object.entries(state.days).filter(([,v])=>v.strengthComplete||v.cardioComplete).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,12);
-    $("history").innerHTML=entries.length?entries.map(([d,v])=>{
-      const parts=[]; if(v.strengthComplete)parts.push("Renforcement"); if(v.cardioComplete)parts.push("Cardio");
-      const dd=new Date(d+"T12:00:00").toLocaleDateString("fr-CA",{day:"numeric",month:"short"});
-      const total=v.strengthResult?.totalSeconds?` · ${fmtSeconds(v.strengthResult.totalSeconds)}`:"";
-      return `<div class="history-item"><strong>${dd}</strong><span class="muted">${parts.join(" + ")}${total}</span></div>`;
-    }).join(""):'<div class="muted">Aucune séance complétée pour le moment.</div>';
-  }
-
-  $("startBtn").addEventListener("click",startSession);
-  $("finishExerciseBtn").addEventListener("click",finishExercise);
-  $("nextExerciseBtn").addEventListener("click",nextExercise);
-  $("cancelSessionBtn").addEventListener("click",cancelSession);
-  $("restartBtn").addEventListener("click",restartSession);
-  $("markCardioBtn").addEventListener("click",()=>{
-    const {key,day}=getDayContext(); state.days[key]={...day,cardioComplete:!day.cardioComplete,updatedAt:Date.now()}; saveState(); render();
-  });
-  $("applyDateBtn").addEventListener("click",()=>{const v=$("dateOverride").value;if(v){appDate=new Date(v+"T12:00:00");render();}});
-  $("resetBtn").addEventListener("click",()=>{
-    if(confirm("Effacer toute la progression? Le 3 août sera de nouveau marqué comme déjà complété.")){
-      localStorage.removeItem(STORAGE_KEY); state=defaultState(); seedAug3AsCompleted(); render();
-    }
-  });
-
-  $("dateOverride").value=dateKey(appDate);
-  render();
-})();
-</script>
 </body>
 </html>

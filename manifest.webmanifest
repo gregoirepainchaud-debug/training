@@ -1,20 +1,21 @@
 {
-  "name": "Mon entraînement – 16 semaines",
+  "name": "Mon entraînement — V.14",
   "short_name": "Entraînement",
-  "start_url": "./index.html",
+  "description": "Application de renforcement musculaire et de marche/course par intervalles.",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#111827",
   "icons": [
     {
-      "src": "logobicep.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
       "src": "apple-touch-icon.png",
       "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "logobicep.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
