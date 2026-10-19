@@ -9,6 +9,9 @@ on:
     branches: [proto-capacitor]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: macos-26
@@ -55,12 +58,22 @@ jobs:
           name: Training-Proto-unsigned-ipa
           path: Training-Proto-unsigned.ipa
 
-      - name: Mettre à jour la Release "proto" et la source SideStore
+      - name: Préparer la Release "proto"
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view proto || gh release create proto --title "Prototype Training (SideStore)" --notes "Builds non signés du prototype. À installer/mettre à jour via SideStore." --prerelease
+          gh release view proto --json tagName -q .tagName || gh release create proto --title "Prototype Training (SideStore)" --notes "Builds non signés du prototype. A installer/mettre a jour via SideStore." --prerelease
+
+      - name: Publier le .ipa dans la Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
           gh release upload proto Training-Proto-unsigned.ipa --clobber
+
+      - name: Générer et publier la source SideStore (apps.json)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
           IPA_URL="https://github.com/${{ github.repository }}/releases/download/proto/Training-Proto-unsigned.ipa"
           cat > apps.json << JSON
           {
@@ -70,16 +83,17 @@ jobs:
               {
                 "name": "Training Proto",
                 "bundleIdentifier": "com.gregoire.training",
-                "developerName": "Grégoire Painchaud",
+                "developerName": "Gregoire Painchaud",
                 "version": "0.1.${{ github.run_number }}",
                 "versionDate": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
                 "downloadURL": "$IPA_URL",
-                "localizedDescription": "Prototype : annonces vocales d'entraînement, écran verrouillé.",
+                "localizedDescription": "Prototype : annonces vocales d'entrainement, ecran verrouille.",
                 "iconURL": "https://gregoirepainchaud-debug.github.io/training/logobicep.png",
-                "size": $(stat -f%z Training-Proto-unsigned.ipa 2>/dev/null || stat -c%s Training-Proto-unsigned.ipa)
+                "size": $(stat -f%z Training-Proto-unsigned.ipa)
               }
             ],
             "news": []
           }
           JSON
-          echo "Source SideStore générée :"; cat apps.json
+          cat apps.json
+          gh release upload proto apps.json --clobber
